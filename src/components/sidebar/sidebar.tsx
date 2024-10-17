@@ -86,9 +86,9 @@ export function Sidebar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <a
-                  href="/products"
+                  href="/produto"
                   className={`flex h-9 w-9 shrink-0 items-center justify-center transition-colors hover:text-white ${isActive(
-                    "/products"
+                    "/produto"
                   )}`}
                 >
                   <Package className="w-5 h-5" />
@@ -103,7 +103,7 @@ export function Sidebar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <a
-                  href="/categories"
+                  href="/categorias"
                   className={`flex h-9 w-9 shrink-0 items-center justify-center transition-colors hover:text-white ${isActive(
                     "/categories"
                   )}`}
@@ -211,7 +211,7 @@ export function Sidebar() {
                 </a>
 
                 <a
-                  href="/products"
+                  href="/produto"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-white"
                 >
                   <Package className="w-5 h-5 translate-all" />
@@ -219,7 +219,7 @@ export function Sidebar() {
                 </a>
 
                 <a
-                  href="/categories"
+                  href="/categorias"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-white"
                 >
                   <ClipboardList className="w-5 h-5" />

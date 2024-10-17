@@ -40,8 +40,8 @@ export function Login() {
       });
 
       if (response.status == 200) {
-        const { token } = response.data;
-        localStorage.setItem("token", token);
+        const data = response.data.data;
+        localStorage.setItem("token", data);
         navigate("/");
       } else {
         alert("Invalid login credentials.");

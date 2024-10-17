@@ -37,7 +37,7 @@ function App() {
             }
           />
           <Route
-            path="/products"
+            path="/produto"
             element={
               <PrivateRoute>
                 <Products />
@@ -45,7 +45,7 @@ function App() {
             }
           />
           <Route
-            path="/categories"
+            path="/categorias"
             element={
               <PrivateRoute>
                 <Categories />

@@ -120,6 +120,23 @@ export function Sidebar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <a
+                  href="/restaurant"
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center transition-colors hover:text-white ${isActive(
+                    "/settings"
+                  )}`}
+                >
+                  <Cog className="w-5 h-5" />
+                  <span className="sr-only">Configurações</span>
+                </a>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="bg-slate-950">
+                Configurações
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <a
                   href="/settings"
                   className={`flex h-9 w-9 shrink-0 items-center justify-center transition-colors hover:text-white ${isActive(
                     "/settings"

@@ -12,6 +12,7 @@ import { Products } from "./components/products/products";
 import { Categories } from "./components/categories/categories";
 import { Login } from "./components/login/login";
 import PrivateRoute from "./components/private-route/private-route";
+import { Restaurant } from "./components/restaurant/restaurant";
 
 function App() {
   return (
@@ -52,7 +53,14 @@ function App() {
               </PrivateRoute>
             }
           />
-
+          <Route
+            path="/restaurant"
+            element={
+              <PrivateRoute>
+                <Restaurant />
+              </PrivateRoute>
+            }
+          />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>

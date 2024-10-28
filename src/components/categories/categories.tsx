@@ -24,6 +24,7 @@ import {
 } from "../ui/table";
 import { LoaderCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export function Categories() {
   const token = localStorage.getItem("token");
@@ -66,8 +67,9 @@ export function Categories() {
           );
         }
       } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-          alert("Please login to view the products.");
+        if (error.status == 401) {
+          localStorage.removeItem("token");
+          navigate("/login");
         }
       } finally {
         setIsLoading(false); // Finaliza o estado de carregamento
@@ -94,8 +96,8 @@ export function Categories() {
       formData.append("imagem", imagem);
     }
 
-    if (categoriaEdit) {
-      try {
+    try {
+      if (categoriaEdit) {
         const response = await api.put(
           `/categoria/${categoriaEdit.id}`,
           formData,
@@ -112,14 +114,9 @@ export function Categories() {
             c.id === categoriaEdit.id ? response.data.data : c
           )
         );
-      } catch (error) {
-        alert("Erro ao criar a Categoria.");
-      } finally {
-        setIsAdding(false);
-        setCategoriaEdit(null); // Termina o estado de "adicionando..."
-      }
-    } else {
-      try {
+
+        toast.success("categoria atualizada com sucesso");
+      } else {
         const response = await api.post("/categoria", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -130,13 +127,19 @@ export function Categories() {
         setCategorias([...categorias, response.data.data]);
         setNome("");
         setImagem(null);
-        alert("Categoria criado com sucesso!");
-      } catch (error) {
-        alert("Erro ao criar a Categoria.");
-      } finally {
-        setIsAdding(false); // Termina o estado de "adicionando..."
-        setDialogOpen(false);
+        toast.success("Categoria criado com sucesso!");
       }
+    } catch (error) {
+      if (error.status == 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+      toast.error(
+        "Erro ao tentar atualizar categoria, verifique se todos os campos foram digitados corretamente"
+      );
+    } finally {
+      setIsAdding(false);
+      setCategoriaEdit(null); // Termina o estado de "adicionando..."
     }
   };
 
@@ -150,12 +153,16 @@ export function Categories() {
       });
 
       if (!response.data.isSucces) {
-        alert(response.data.message);
+        toast.error(response.data.message);
       }
 
       setCategorias(categorias.filter((c) => c.id !== categoriaId));
     } catch (error) {
-      alert(error);
+      if ((error.status = 401)) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+      toast.error(error);
     }
   };
 

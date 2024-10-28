@@ -13,11 +13,13 @@ import { Categories } from "./components/categories/categories";
 import { Login } from "./components/login/login";
 import PrivateRoute from "./components/private-route/private-route";
 import { Restaurant } from "./components/restaurant/restaurant";
+import { Toaster } from "sonner";
 
 function App() {
   return (
     <>
       <Router>
+        <Toaster />
         <Sidebar />
         <Routes>
           <Route path="/login" element={<Login />} />

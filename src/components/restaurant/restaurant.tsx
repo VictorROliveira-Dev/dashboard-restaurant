@@ -35,10 +35,14 @@ import { useEffect, useState } from "react";
 import { DialogFooter, DialogHeader } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { toast } from "sonner";
+import { ServerResponse } from "http";
+import axios, { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 export function Restaurant() {
   const token = localStorage.getItem("token");
-
+  const navigate = useNavigate();
   interface restaurante {
     id: number;
     nome: string;
@@ -79,52 +83,138 @@ export function Restaurant() {
     return weekDays[dayNumber];
   }
 
-  const fecharAbrirRestaurante = async (horario: horario) => {
-    horario.funcionando
-      ? (horario.funcionando = false)
-      : (horario.funcionando = true);
+  useEffect(() => {
+    const fetchRestaurante = async () => {
+      try {
+        const response = await api.get("/restaurante", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-    console.log(horario);
-    const response = await api.put(`/horario/${horario.diaSemana}`, horario, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+        if (!response.data.isSucces) {
+          alert("nao foi possivel recuperar dados");
+          return;
+        }
+        setRestaurante(response.data.data);
+      } catch (error) {
+        toast.error("erro ao tentar buscar dados do restaurante");
+      }
+    };
+
+    const fetchHorarios = async () => {
+      try {
+        const response = await api.get("/horario", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.data.isSucces) {
+          toast.error("erro ao tentar buscar dados do restaurante");
+          return;
+        }
+
+        setHorarios(response.data.data);
+      } catch (erro) {
+        toast.error("erro ao tentar buscar dados do restaurante");
+      }
+    };
+
+    fetchHorarios();
+    fetchRestaurante();
+  }, []);
+
+  const fecharAbrirRestaurante = async (horario: horario) => {
+    try {
+      const horarioAtualizado = {
+        horaAbertura: horario.horaAbertura,
+        horaFechamento: horario.horaFechamento,
+        diaSemana: horario.diaSemana,
+        funcionando: horario.funcionando ? false : true,
+      } as horario;
+
+      const response = await api.put(
+        `/horario/${horario.diaSemana}`,
+        horarioAtualizado,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.data.isSucces) {
+        toast.error(response.data.message);
+      }
+      setHorarios(
+        horarios.map((h) =>
+          h.diaSemana === horario.diaSemana ? horarioAtualizado : h
+        )
+      );
+
+      console.log(horarios);
+
+      toast.success(response.data.message);
+    } catch (error) {
+      console.log(error.status);
+      if (error.status == 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        toast.error("erro ao tentar atualizar funcionamento do restaurante");
+      }
+    }
   };
 
-  const atualizarFuncionamento = async (
-    e: React.FormEvent,
-    horario: horario
-  ) => {
-    e.preventDefault();
+  const atualizarFuncionamento = async (horario: horario) => {
+    try {
+      setIsAdding(true);
 
-    const horarioAtualizado = {
-      diaSemana: horario.diaSemana,
-      horaAbertura: horarioAbertura,
-      horaFechamento: horarioFechamento,
-      funcionando: horario.funcionando,
-    } as horario;
+      const horarioAtualizado = {
+        diaSemana: horario.diaSemana,
+        horaAbertura: horarioAbertura ? horarioAbertura : horario.horaAbertura,
+        horaFechamento: horarioFechamento
+          ? horarioFechamento
+          : horario.horaFechamento,
+        funcionando: horario.funcionando,
+      } as horario;
 
-    const response = await api.put(
-      `/horario/${horario.diaSemana}`,
-      horarioAtualizado,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await api.put(
+        `/horario/${horario.diaSemana}`,
+        horarioAtualizado,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.data.isSucces) {
+        toast.error("error", { className: "bg-red-200" });
+        return;
       }
-    );
 
-    if (!response.data.isSucces) {
-      alert("error");
-      return;
+      setHorarios(
+        horarios.map((h) =>
+          h.diaSemana === horario.diaSemana ? horarioAtualizado : h
+        )
+      );
+
+      toast.success("dados do restaurante atualizado", {
+        className: "bg-green-200",
+      });
+    } catch (error) {
+      console.log(error.status);
+      if (error.status == 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        toast.error("erro ao tentar atualizar funcionamento do restaurante");
+      }
+    } finally {
+      setIsAdding(false);
     }
-
-    setHorarios(
-      horarios.map((h) =>
-        h.diaSemana === horario.diaSemana ? horarioAtualizado : h
-      )
-    );
   };
 
   const atualizarRestaurante = async (e: React.FormEvent) => {
@@ -133,13 +223,11 @@ export function Restaurant() {
 
     try {
       const updateRestaurante = {
-        nome: nome,
-        telefone: telefone,
-        endereco: endereco,
-        email: email,
+        nome: nome ? nome : restauranteInfo?.nome,
+        telefone: telefone ? telefone : restauranteInfo?.telefone,
+        endereco: endereco ? endereco : restauranteInfo?.endereco,
+        email: email ? email : restauranteInfo?.email,
       } as restaurante;
-
-      setRestaurante(updateRestaurante);
 
       const response = await api.put(`/restaurante`, updateRestaurante, {
         headers: {
@@ -148,50 +236,22 @@ export function Restaurant() {
       });
 
       if (!response.data.isSucces) {
-        alert("erro");
+        toast.error("erro ao tentar atualizar dados do restaurante");
       }
+
+      setRestaurante(updateRestaurante);
     } catch (erro) {
+      console.log(error.status);
+      if (error.status == 401) {
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        toast.error("erro ao tentar atualizar dados do restaurante");
+      }
     } finally {
       setIsAdding(false);
     }
   };
-
-  useEffect(() => {
-    const fetchRestaurante = async () => {
-      const response = await api.get("/restaurante", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.data.isSucces) {
-        alert("nao foi possivel recuperar dados");
-        return;
-      }
-
-      setRestaurante(response.data.data);
-    };
-
-    const fetchHorarios = async () => {
-      const token = localStorage.getItem("token");
-
-      const response = await api.get("/horario", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.data.isSucces) {
-        alert("nao foi possivel recuperar dados");
-        return;
-      }
-
-      setHorarios(response.data.data);
-    };
-
-    fetchHorarios();
-    fetchRestaurante();
-  }, []);
 
   return (
     <>
@@ -257,6 +317,7 @@ export function Restaurant() {
                     <Label htmlFor="name">Nome</Label>
                     <Input
                       id="name"
+                      defaultValue={restauranteInfo?.nome}
                       onChange={(e) => setNome(e.target.value)}
                       className="col-span-3 border-2"
                     />
@@ -266,6 +327,7 @@ export function Restaurant() {
                     <Label htmlFor="closing-time">Telefone</Label>
                     <Input
                       id="closing-time"
+                      defaultValue={restauranteInfo?.telefone}
                       onChange={(e) => setTelefone(e.target.value)}
                       className="col-span-3 border-2"
                     />
@@ -274,6 +336,7 @@ export function Restaurant() {
                     <Label htmlFor="closing-time">Endereco</Label>
                     <Input
                       id="closing-time"
+                      defaultValue={restauranteInfo?.endereco}
                       onChange={(e) => setEndereco(e.target.value)}
                       className="col-span-3 border-2"
                     />
@@ -282,6 +345,7 @@ export function Restaurant() {
                     <Label htmlFor="closing-time">Email</Label>
                     <Input
                       id="closing-time"
+                      defaultValue={restauranteInfo?.email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="col-span-3 border-2"
                     />
@@ -378,15 +442,12 @@ export function Restaurant() {
                             {getWeekDayName(horario.diaSemana)}
                           </DialogTitle>
                         </DialogHeader>
-
-                        <form
-                          onSubmit={(e) => atualizarFuncionamento(e, horario)}
-                          className="space-y-6 mt-4 "
-                        >
+                        <form className="space-y-6 mt-4 ">
                           <div className="flex flex-col items-start text-right gap-3">
                             <Label htmlFor="name">Horario abertura</Label>
                             <Input
                               id="name"
+                              defaultValue={horario.horaAbertura}
                               onChange={(e) =>
                                 setHorarioAbertura(e.target.value)
                               }
@@ -398,29 +459,30 @@ export function Restaurant() {
                             <Label htmlFor="closing-time">Hora de fechar</Label>
                             <Input
                               id="closing-time"
+                              defaultValue={horario.horaFechamento}
                               onChange={(e) =>
                                 setHorarioFechamento(e.target.value)
                               }
                               className="col-span-3 border-2"
                             />
                           </div>
-                          <DialogFooter>
-                            <DialogClose asChild>
-                              <Button variant="destructive">Cancelar</Button>
-                            </DialogClose>
-                            <Button
-                              type="submit"
-                              variant="outline"
-                              className="text-slate-950"
-                            >
-                              {isAdding ? (
-                                <LoaderCircle className="animate-spin" />
-                              ) : (
-                                "Salvar"
-                              )}
-                            </Button>
-                          </DialogFooter>
                         </form>
+                        <DialogFooter className="mt-3 w-auto sm:justify-center">
+                          <DialogClose asChild>
+                            <Button variant="destructive">Cancelar</Button>
+                          </DialogClose>
+                          <Button
+                            variant="outline"
+                            className="text-slate-950"
+                            onClick={() => atualizarFuncionamento(horario)}
+                          >
+                            {isAdding ? (
+                              <LoaderCircle className="animate-spin" />
+                            ) : (
+                              "Salvar"
+                            )}
+                          </Button>
+                        </DialogFooter>
                       </DialogContent>
                     </DialogPortal>
                   </Dialog>

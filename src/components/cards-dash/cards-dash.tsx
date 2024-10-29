@@ -7,9 +7,25 @@ import {
   CardTitle,
 } from "../ui/card";
 import ChartOverview from "../chart/chart";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 
 export function CardsDash() {
-
   return (
     <>
       <main className="sm:ml-14 p-4 bg-slate-950 sm:h-screen">
@@ -30,7 +46,7 @@ export function CardsDash() {
 
             <CardContent>
               <p className="text-base text-white sm:text-lg font-bold">
-                R$ 40.000
+                R$ 0.00
               </p>
             </CardContent>
           </Card>
@@ -50,7 +66,7 @@ export function CardsDash() {
             </CardHeader>
 
             <CardContent>
-              <p className="text-base sm:text-lg font-bold text-white">200</p>
+              <p className="text-base sm:text-lg font-bold text-white">0</p>
             </CardContent>
           </Card>
 
@@ -69,7 +85,7 @@ export function CardsDash() {
             </CardHeader>
 
             <CardContent>
-              <p className="text-base sm:text-lg font-bold text-white">2500</p>
+              <p className="text-base sm:text-lg font-bold text-white">0</p>
             </CardContent>
           </Card>
 
@@ -89,7 +105,7 @@ export function CardsDash() {
 
             <CardContent>
               <p className="text-base sm:text-lg font-bold text-white">
-                R$ 12.500
+                R$ 0.00
               </p>
             </CardContent>
           </Card>
@@ -97,6 +113,61 @@ export function CardsDash() {
 
         <section className="mt-4 flex flex-col md:flex-row gap-4">
           <ChartOverview />
+
+          <Card className="w-full bg-slate-900 border-none">
+            <CardHeader className="flex md:flex-row items-center justify-between">
+              <CardTitle className="text-lg text-white">
+                Produtos Mais Pedidos:
+              </CardTitle>
+              <Select>
+                <SelectTrigger className="w-[220px] text-white border-2">
+                  <SelectValue placeholder="Selecione uma categoria" />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-950 text-white border-none">
+                  <SelectGroup>
+                    <SelectLabel className="font-bold">Categorias</SelectLabel>
+                    <SelectItem className="cursor-pointer" value="lanches">
+                      Lanches
+                    </SelectItem>
+                    <SelectItem className="cursor-pointer" value="bebidas">
+                      Bebidas
+                    </SelectItem>
+                    <SelectItem className="cursor-pointer" value="refeicoes">
+                      Refeições
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader className="border-b-2">
+                  <TableRow className="hover:bg-slate-950">
+                    <TableHead className="text-white font-bold text-center">
+                      Foto
+                    </TableHead>
+                    <TableHead className="text-white font-bold text-center">
+                      Produto
+                    </TableHead>
+                    <TableHead className="text-white font-bold text-center">
+                      Descrição
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody className="text-white md:text-center text-center">
+                  {Array.from({ length: 5 }).map((_, i) => {
+                    return (
+                      <TableRow className="hover:bg-slate-950">
+                        <TableCell>Foto {i} </TableCell>
+                        <TableCell>Produto {i} </TableCell>
+                        <TableCell>Descrição {i} </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </section>
       </main>
     </>

@@ -1,6 +1,8 @@
-import { LoaderCircle, Pen, Plus, Search, Trash } from "lucide-react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { useEffect, useState } from "react";
+import { api } from "@/lib/axios";
+import { ProductCreate } from "../products/product-create";
+import { ProductEdit } from "../products/product-edit";
+import { ProductDelete } from "../products/product-delete";
 import {
   Table,
   TableBody,
@@ -9,80 +11,36 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { Button } from "../ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
-import { Label } from "../ui/label";
-import { useEffect, useState } from "react";
-import { api } from "@/lib/axios";
-
-interface ProductList {
-  id?: number;
-  nome: string;
-  descricao: string;
-  preco: number;
-  categoriaId: number;
-}
+  ChevronLeft,
+  ChevronRight,
+  LoaderCircle,
+  Pen,
+  Search,
+} from "lucide-react";
+import { Product } from "../../lib/types";
+import { Input } from "../ui/input";
+import { toast } from "sonner";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+} from "../ui/pagination";
 
 export function Products() {
-  const [nome, setNome] = useState<string>("");
-  const [descricao, setDescricao] = useState<string>("");
-  const [preco, setPreco] = useState<number>(0);
-  const [categoriaId, setCategoriaId] = useState<number>(1);
-  const [products, setProducts] = useState<ProductList[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // Estado de carregamento
-  const [isAdding, setIsAdding] = useState<boolean>(false); // Estado de adição de produto
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsAdding(true); // Inicia o estado de "adicionando..."
-
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      alert("Usuário não autênticado.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("nome", nome);
-    formData.append("descricao", descricao);
-    formData.append("preco", preco.toString());
-    formData.append("categoriaId", categoriaId.toString());
-
-    try {
-      const response = await api.post("/produto", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // Adiciona o produto recém-criado à lista de produtos sem precisar recarregar a página
-      setProducts([...products, response.data.data]);
-      setNome("");
-      setDescricao("");
-      setPreco(0);
-      setCategoriaId(1);
-      alert("Produto criado com sucesso!");
-    } catch (error) {
-      alert("Erro ao criar o produto.");
-    } finally {
-      setIsAdding(false); // Termina o estado de "adicionando..."
-    }
-  };
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [searchProduct, setSearchProduct] = useState("");
 
   useEffect(() => {
     const fetchProducts = async () => {
       const token = localStorage.getItem("token");
-      setIsLoading(true); // Inicia o estado de carregamento
+      setIsLoading(true);
 
       try {
         const response = await api.get("/produto", {
@@ -91,182 +49,178 @@ export function Products() {
           },
         });
 
-        if (response.status === 200) {
-          setProducts(
-            Array.isArray(response.data.data) ? response.data.data : []
-          );
-        }
-      } catch (error: any) {
-        if (error.response && error.response.status === 401) {
-          alert("Please login to view the products.");
-        }
+        setProducts(response.data.data);
+      } catch (error) {
+        toast.success("Erro ao tentar recuperar os produtos.", {
+          className:
+            "bg-red-500 text-white font-semibold border-none shadow-lg",
+          style: {
+            borderRadius: "10px",
+            padding: "16px",
+          },
+        });
       } finally {
-        setIsLoading(false); // Finaliza o estado de carregamento
+        setIsLoading(false);
       }
     };
 
     fetchProducts();
   }, []);
 
+  const filteredProducts = products.filter((product) => {
+    if (!product.nome) return false;
+
+    return product.nome.toLowerCase().includes(searchProduct.toLowerCase());
+  });
+
   return (
-    <>
-      <div className="flex items-center h-screen p-1 bg-slate-950">
-        <div className="mx-auto md:max-w-4xl space-y-4">
-          <h1 className="text-white md:text-4xl text-2xl font-semibold">
-            Produtos:
-          </h1>
+    <div className="flex items-center md:h-screen h-[800px] p-1 bg-slate-950">
+      <div className="mx-auto md:max-w-4xl md:w-[1000px] w-[350px] space-y-4">
+        <h1 className="text-white md:text-4xl text-2xl font-semibold">
+          Produtos:
+        </h1>
 
-          <div className="flex items-center justify-between">
-            <form className="flex items-center gap-2">
-              <Input
-                name="name"
-                className="border-2 text-white"
-                placeholder="Nome do produto..."
-              />
-              <Button className="mr-2">
-                <Search className="w-4 mr-2" />
-                Filtrar
-              </Button>
-            </form>
+        <div className="flex items-center justify-between">
+          <form
+            className="flex items-center gap-2"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <Input
+              name="name"
+              className="border-2 text-white"
+              placeholder="Nome do produto..."
+              value={searchProduct}
+              onChange={(e) => setSearchProduct(e.target.value)}
+            />
+            <Search className="mr-2 text-white" size={30} />
+          </form>
 
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="w-4 mr-2" />
-                  Novo Produto
-                </Button>
-              </DialogTrigger>
-
-              <DialogContent className="bg-slate-900 border-none text-white">
-                <DialogHeader>
-                  <DialogTitle>Novo Produto</DialogTitle>
-                  <DialogDescription>Crie um novo produto</DialogDescription>
-                </DialogHeader>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-4 items-center text-right gap-3">
-                    <Label htmlFor="nome">Produto</Label>
-                    <Input
-                      id="nome"
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      required
-                      className="col-span-3 border-2"
-                      placeholder="Digite o nome do produto..."
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-4 items-center text-right gap-3">
-                    <Label htmlFor="descricao">Descrição</Label>
-                    <Input
-                      id="descricao"
-                      value={descricao}
-                      onChange={(e) => setDescricao(e.target.value)}
-                      required
-                      className="col-span-3 border-2"
-                      placeholder="Digite a descrição do produto..."
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-4 items-center text-right gap-3">
-                    <Label htmlFor="price">Preço</Label>
-                    <Input
-                      id="price"
-                      value={preco === 0 ? "" : preco}
-                      onChange={(e) =>
-                        setPreco(
-                          e.target.value === "" ? 0 : parseFloat(e.target.value)
-                        )
-                      }
-                      className="col-span-3 border-2"
-                      placeholder="Digite o preço..."
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-4 items-center text-right gap-3">
-                    <Label htmlFor="category">ID Categoria</Label>
-                    <Input
-                      id="category"
-                      value={categoriaId === 0 ? "" : categoriaId}
-                      onChange={(e) =>
-                        setCategoriaId(
-                          e.target.value === "" ? 0 : parseInt(e.target.value)
-                        )
-                      }
-                      className="col-span-3 border-2"
-                    />
-                  </div>
-
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button variant="destructive">Cancelar</Button>
-                    </DialogClose>
-                    <Button
-                      type="submit"
-                      variant="outline"
-                      className="text-slate-950"
-                      disabled={isAdding}
-                    >
-                      {isAdding ? (
-                        <LoaderCircle className="animate-spin " />
-                      ) : (
-                        "Criar Produto"
-                      )}
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          <div className="text-white md:w-[1000px] p-2">
-            {isLoading ? (
-              <span className="flex justify-center items-center">
-                <LoaderCircle className="animate-spin " />
-              </span>
-            ) : (
-              <Table>
-                <TableHeader className="border-b-2">
-                  <TableRow>
-                    <TableHead className="text-white font-bold">
-                      Produto
-                    </TableHead>
-                    <TableHead className="text-white font-bold">
-                      Descrição
-                    </TableHead>
-                    <TableHead className="text-white font-bold">
-                      Preço
-                    </TableHead>
-                    <TableHead className="text-white font-bold">
-                      ID Categoria
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody className="md:text-start text-center">
-                  {products.map((product, i) => (
-                    <TableRow key={i}>
-                      <TableCell>{product.nome}</TableCell>
-                      <TableCell>{product.descricao}</TableCell>
-                      <TableCell>{product.preco}</TableCell>
-                      <TableCell>{product.categoriaId}</TableCell>
-                      <TableCell>
-                        <Button className="bg-transparent" size="sm">
-                          <Pen className="w-5" />
-                        </Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button className="bg-transparent" size="sm">
-                          <Trash className="w-5" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </div>
+          <ProductCreate setProducts={setProducts} products={products} />
         </div>
+
+        {isLoading ? (
+          <div className="text-white flex justify-center overflow-y-scroll scrollbar-hide">
+            <span className="flex justify-center items-center">
+              <LoaderCircle className="animate-spin" />
+            </span>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader className="border-b-2">
+              <TableRow>
+                <TableHead className="text-white font-bold text-center">
+                  Foto
+                </TableHead>
+                <TableHead className="text-white font-bold text-center">
+                  Produto
+                </TableHead>
+                <TableHead className="text-white font-bold text-center">
+                  Descrição
+                </TableHead>
+                <TableHead className="text-white font-bold text-center">
+                  Preço
+                </TableHead>
+                <TableHead className="text-white font-bold text-center">
+                  Categoria
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="text-white md:text-center text-center">
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map((product) => (
+                  <TableRow key={product.id} className="hover:bg-slate-900">
+                    <TableCell>
+                      <img
+                        src={product.imagem}
+                        alt={product.nome}
+                        loading="lazy"
+                        className="w-12 object-cover rounded-md"
+                      />
+                    </TableCell>
+                    <TableCell>{product.nome}</TableCell>
+                    <TableCell>{product.descricao}</TableCell>
+                    <TableCell>
+                      {product.preco.toLocaleString("pt-BR", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </TableCell>
+                    <TableCell>{product.categoriaId}</TableCell>
+                    <TableCell className="flex gap-2 mt-1 justify-center">
+                      <Button
+                        onClick={() => {
+                          setEditingProduct(product);
+                          setIsEditDialogOpen(true);
+                        }}
+                        className="hover:bg-slate-950"
+                      >
+                        <Pen className="w-4 text-yellow-500" />
+                      </Button>
+                      <ProductDelete
+                        productId={product.id}
+                        setProducts={setProducts}
+                        products={products}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center text-white">
+                    Nenhum produto encontrado.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        )}
+        <Pagination>
+          <PaginationContent className="text-white">
+            <PaginationItem>
+              <a
+                href="#"
+                className="flex items-center gap-1 cursor-pointer text-sm"
+              >
+                <ChevronLeft size={20} />
+                Anterior
+              </a>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" className="text-black" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <a
+                href="#"
+                className="flex items-center gap-1 cursor-pointer text-sm"
+              >
+                Próxima
+                <ChevronRight size={20} />
+              </a>
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+
+        {editingProduct && (
+          <ProductEdit
+            product={editingProduct}
+            setProducts={setProducts}
+            products={products}
+            isOpen={isEditDialogOpen}
+            setIsOpen={setIsEditDialogOpen}
+          />
+        )}
       </div>
-    </>
+    </div>
   );
 }

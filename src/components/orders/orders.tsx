@@ -1,3 +1,4 @@
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import {
   Card,
@@ -29,11 +30,11 @@ export function Orders() {
                 <CardTitle>Pedido 89</CardTitle>
                 <CardDescription>Rua Rio Solimões, 410</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2 flex items-center gap-2">
+              <CardContent className="flex items-center gap-2">
                 <span>Victor Alef</span>
-                <span className="p-1 rounded-md border-2 text-[8px] text-white font-medium">
+                <Badge className="text-[8px] bg-blue-700 text-white hover:bg-blue-700 select-none">
                   Aberto
-                </span>
+                </Badge>
               </CardContent>
               <CardFooter className="flex gap-2">
                 <Button className="bg-foreground p-2 rounded-md border-2 border-red-600 text-xs text-white hover:bg-red-600">
@@ -53,9 +54,9 @@ export function Orders() {
                 <span>João Batista</span>
               </CardContent>
               <CardFooter>
-                <span className="bg-transparent p-2 rounded-md border-2 text-xs select-none font-medium text-white">
+                <Badge className="bg-white text-black hover:bg-white select-none">
                   Finalizado
-                </span>
+                </Badge>
               </CardFooter>
             </Card>
             <Card className="mb-4 bg-slate-900 text-white border-none">
@@ -67,9 +68,9 @@ export function Orders() {
                 <span>João Batista</span>
               </CardContent>
               <CardFooter>
-                <span className="bg-transparent p-2 rounded-md border-2 text-xs select-none font-medium text-white">
+                <Badge className="bg-white text-black hover:bg-white select-none">
                   Finalizado
-                </span>
+                </Badge>
               </CardFooter>
             </Card>
             <Card className="mb-4 bg-slate-900 text-white border-none">
@@ -81,9 +82,9 @@ export function Orders() {
                 <span>João Batista</span>
               </CardContent>
               <CardFooter>
-                <span className="bg-transparent p-2 rounded-md border-2 text-xs select-none font-medium text-white">
+                <Badge className="bg-white text-black hover:bg-white select-none">
                   Finalizado
-                </span>
+                </Badge>
               </CardFooter>
             </Card>
           </TabsContent>
@@ -97,11 +98,11 @@ export function Orders() {
                 <CardTitle>Pedido 89</CardTitle>
                 <CardDescription>Rua Rio Solimões, 410</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2 flex items-center gap-2">
+              <CardContent className="flex items-center gap-2">
                 <span>Victor Alef</span>
-                <span className="p-1 rounded-md border-2 text-[8px] text-white font-medium">
+                <Badge className="text-[8px] bg-blue-700 text-white hover:bg-blue-700 select-none">
                   Aberto
-                </span>
+                </Badge>
               </CardContent>
               <CardFooter className="flex gap-2">
                 <Button className="bg-foreground p-2 rounded-md border-2 border-red-600 text-xs text-white hover:bg-red-600">
@@ -123,11 +124,11 @@ export function Orders() {
                 <CardTitle>Pedido 92</CardTitle>
                 <CardDescription>Pedido para Rua Rio Amazonas</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2 flex items-center gap-2">
+              <CardContent className="flex items-center gap-2">
                 <span>Rui Ramos</span>
-                <span className="p-1 rounded-md border-2 border-yellow-600 text-[8px] text-yellow-600 font-medium">
+                <Badge className="text-[8px] bg-yellow-600 text-white hover:bg-yellow-600 select-none">
                   Em Preparo
-                </span>
+                </Badge>
               </CardContent>
               <CardFooter className="flex gap-2">
                 <Button className="bg-foreground p-2 rounded-md border-2 border-red-600 text-xs text-white hover:bg-red-600">
@@ -145,11 +146,11 @@ export function Orders() {
                   Pedido para Joaquim Borba Filho
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2 flex items-center gap-2">
+              <CardContent className="flex items-center gap-2">
                 <span>Daniel Luka</span>
-                <span className="p-1 rounded-md border-2 border-yellow-600 text-[8px] text-yellow-600 font-medium">
+                <Badge className="text-[8px] bg-yellow-600 text-white hover:bg-yellow-600 select-none">
                   Em Preparo
-                </span>
+                </Badge>
               </CardContent>
               <CardFooter className="flex gap-2">
                 <Button className="bg-foreground p-2 rounded-md border-2 border-red-600 text-xs text-white hover:bg-red-600">
@@ -175,9 +176,9 @@ export function Orders() {
                 <span>João Batista</span>
               </CardContent>
               <CardFooter>
-                <span className="bg-transparent p-2 rounded-md border-2 text-xs select-none font-medium text-white">
+                <Badge className="bg-white text-black hover:bg-white select-none">
                   Finalizado
-                </span>
+                </Badge>
               </CardFooter>
             </Card>
           </TabsContent>

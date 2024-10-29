@@ -12,6 +12,7 @@ import { api } from "@/lib/axios";
 import { LoaderCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export function Login() {
   const [email, setEmail] = useState<string>("");
@@ -24,6 +25,8 @@ export function Login() {
     const token = localStorage.getItem("token");
     if (token) {
       navigate("/");
+    } else {
+      navigate("/login");
     }
   }, [navigate]);
 
@@ -44,10 +47,26 @@ export function Login() {
         localStorage.setItem("token", data);
         navigate("/");
       } else {
-        alert("Invalid login credentials.");
+        toast.error("Credênciais inválidas.", {
+          className:
+            "bg-red-500 text-white font-semibold border-none shadow-lg",
+          style: {
+            borderRadius: "10px",
+            padding: "16px",
+          },
+        });
+        setLoading(false);
       }
     } catch (error) {
-      alert("Error logging in. Please try again.");
+      toast.error("Ocorreu um erro ao tentar fazer login.", {
+        className: "bg-red-500 text-white font-semibold border-none shadow-lg",
+        style: {
+          borderRadius: "10px",
+          padding: "16px",
+        },
+      });
+
+      setLoading(false);
     }
   };
 
@@ -84,9 +103,9 @@ export function Login() {
             </div>
             <Button
               type="submit"
-              className="bg-foreground hover:bg-slate-50 hover:text-slate-950 mt-4"
+              className="bg-white text-foreground hover:bg-slate-950 hover:text-white mt-4 w-full"
             >
-              {loading ? <LoaderCircle className="animate-spin " /> : "Entrar"}
+              {loading ? <LoaderCircle className="animate-spin" /> : "Entrar"}
             </Button>
           </form>
         </CardContent>

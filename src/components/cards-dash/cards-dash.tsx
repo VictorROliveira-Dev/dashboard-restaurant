@@ -111,7 +111,7 @@ export function CardsDash() {
           </Card>
         </section>
 
-        <section className="mt-4 flex flex-col md:flex-row gap-4">
+        <section className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <ChartOverview />
 
           <Card className="w-full bg-slate-900 border-none">

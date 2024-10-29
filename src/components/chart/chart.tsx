@@ -30,7 +30,7 @@ const chartConfig = {
 
 export default function ChartOverview() {
   return (
-    <Card className="w-full md:w-1/2 md:max-w-[600px] bg-slate-900 border-none">
+    <Card className="w-full bg-slate-900 border-none">
       <CardHeader>
         <div className="flex items-center justify-center gap-4">
           <CardTitle className="text-lg sm:text-xl text-white">

@@ -125,7 +125,7 @@ export function Products() {
                 </TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="text-white md:text-center text-center">
+            <TableBody className="text-white text-center">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
                   <TableRow key={product.id} className="hover:bg-slate-900">

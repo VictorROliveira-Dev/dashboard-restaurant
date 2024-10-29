@@ -42,8 +42,8 @@ export function Categories() {
     null
   );
   const [categorias, setCategorias] = useState<ListaCategoria[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true); // Estado de carregamento
-  const [isAdding, setIsAdding] = useState<boolean>(false); // Estado de adição de produto
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isAdding, setIsAdding] = useState<boolean>(false);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -72,7 +72,7 @@ export function Categories() {
           navigate("/login");
         }
       } finally {
-        setIsLoading(false); // Finaliza o estado de carregamento
+        setIsLoading(false);
       }
     };
 
@@ -81,7 +81,7 @@ export function Categories() {
 
   useEffect(() => {
     if (categoriaEdit) {
-      setNome(categoriaEdit.nome); // Define o nome da categoria no estado
+      setNome(categoriaEdit.nome);
     }
   }, [categoriaEdit]);
 
@@ -129,7 +129,7 @@ export function Categories() {
         setImagem(null);
         toast.success("Categoria criado com sucesso!");
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.status == 401) {
         localStorage.removeItem("token");
         navigate("/login");
@@ -139,7 +139,7 @@ export function Categories() {
       );
     } finally {
       setIsAdding(false);
-      setCategoriaEdit(null); // Termina o estado de "adicionando..."
+      setCategoriaEdit(null);
     }
   };
 
@@ -157,7 +157,7 @@ export function Categories() {
       }
 
       setCategorias(categorias.filter((c) => c.id !== categoriaId));
-    } catch (error) {
+    } catch (error: any) {
       if ((error.status = 401)) {
         localStorage.removeItem("token");
         navigate("/login");
@@ -168,25 +168,24 @@ export function Categories() {
 
   return (
     <>
-      <div className="flex items-center h-screen p-1 bg-slate-950">
-        <div className="mx-auto md:max-w-4xl space-y-4">
+      <div className="flex items-center md:h-screen h-[800px] p-1 bg-slate-950">
+        <div className="mx-auto md:max-w-2xl md:w-[800px] w-[350px] space-y-4">
           <h1 className="text-white md:text-4xl text-2xl font-semibold">
-            Categorias:
+            Produtos:
           </h1>
 
           <div className="flex items-center justify-between">
-            <form className="flex items-center gap-2">
+            <form
+              className="flex items-center gap-2"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <Input
                 name="name"
-                placeholder="Nome da categoria..."
                 className="border-2 text-white"
+                placeholder="Nome do produto..."
               />
-              <Button className="mr-2">
-                <Search className="w-4 mr-2" />
-                Filtrar
-              </Button>
+              <Search className="mr-2 text-white" size={30} />
             </form>
-
             <Dialog open={dialogOpen || categoriaEdit != null}>
               <DialogTrigger asChild>
                 <Button onClick={() => setDialogOpen(true)}>
@@ -265,55 +264,66 @@ export function Categories() {
             </Dialog>
           </div>
 
-          <div className=" text-white md:w-[1000px] p-2">
-            {isLoading ? (
-              <LoaderCircle className="animate-spin" />
-            ) : (
-              <Table>
-                <TableHeader className="border-b-2">
-                  <TableHead className="text-white font-bold">ID</TableHead>
-                  <TableHead className="text-white font-bold">Imagem</TableHead>
-                  <TableHead className="text-white font-bold">
-                    Categoria
+          {isLoading ? (
+            <div className="text-white flex justify-center overflow-y-scroll scrollbar-hide">
+              <span className="flex justify-center items-center">
+                <LoaderCircle className="animate-spin" />
+              </span>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader className="border-b-2">
+                <TableRow>
+                  <TableHead className="text-white font-bold text-center md:text-start">
+                    Foto
                   </TableHead>
-                </TableHeader>
-                <TableBody className="md:text-start text-center">
-                  {categorias.map((categoria) => (
-                    <TableRow key={categoria.id}>
-                      <TableCell>{categoria.id}</TableCell>
+                  <TableHead className="text-white font-bold text-center md:text-start">
+                    Produto
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="text-white text-center">
+                {categorias.length > 0 ? (
+                  categorias.map((categoria) => (
+                    <TableRow
+                      key={categoria.id}
+                      className="hover:bg-slate-900 text-center md:text-start"
+                    >
                       <TableCell>
                         <img
                           src={categoria.imagem}
-                          alt=""
-                          className="h-12 w-12 rounded-full object-cover"
+                          alt={categoria.nome}
+                          loading="lazy"
+                          className="w-12 h-12 object-cover rounded-md"
                         />
                       </TableCell>
                       <TableCell>{categoria.nome}</TableCell>
-
-                      <TableCell>
-                        <Button
-                          onClick={() => setCategoriaEdit(categoria)}
-                          className="bg-transparent"
-                          size="sm"
-                        >
-                          <Pen className="w-5" />
+                      <TableCell className="flex gap-2 mt-1 items-center justify-center">
+                        <Button className="hover:bg-slate-950">
+                          <Pen
+                            onClick={() => setCategoriaEdit(categoria)}
+                            className="text-yellow-500"
+                          />
                         </Button>
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          onClick={() => handleRemoverCategoria(categoria.id)}
-                          className="bg-transparent"
-                          size="sm"
-                        >
-                          <Trash className="w-5" />
+                        <Button className="hover:bg-slate-950">
+                          <Trash
+                            onClick={() => handleRemoverCategoria(categoria.id)}
+                            className="text-red-500"
+                          />
                         </Button>
                       </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </div>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-white">
+                      Nenhum produto encontrado.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
         </div>
       </div>
     </>

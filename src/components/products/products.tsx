@@ -51,7 +51,7 @@ export function Products() {
 
         setProducts(response.data.data);
       } catch (error) {
-        toast.success("Erro ao tentar recuperar os produtos.", {
+        toast.error("Erro ao tentar recuperar os produtos.", {
           className:
             "bg-red-500 text-white font-semibold border-none shadow-lg",
           style: {
@@ -145,7 +145,7 @@ export function Products() {
                         currency: "BRL",
                       })}
                     </TableCell>
-                    <TableCell>{product.categoriaId}</TableCell>
+                    <TableCell>{product.nomeCategoria}</TableCell>
                     <TableCell className="flex gap-2 mt-1 justify-center">
                       <Button
                         onClick={() => {

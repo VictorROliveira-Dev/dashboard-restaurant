@@ -33,7 +33,9 @@ export function ProductEdit({
   const [nome, setNome] = useState(product.nome);
   const [descricao, setDescricao] = useState(product.descricao);
   const [preco, setPreco] = useState<number>(product.preco);
-  const [categoriaId, setCategoriaId] = useState<number>(product.categoriaId);
+  const [nomeCategoria, setNomeCategoria] = useState<string>(
+    product.nomeCategoria
+  );
   const [imagem, setImagem] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -43,7 +45,7 @@ export function ProductEdit({
     setNome(product.nome);
     setDescricao(product.descricao);
     setPreco(product.preco);
-    setCategoriaId(product.categoriaId);
+    setNomeCategoria(product.nomeCategoria);
     setImagem(null);
   }, [product]);
 
@@ -67,7 +69,7 @@ export function ProductEdit({
     formData.append("nome", nome);
     formData.append("descricao", descricao);
     formData.append("preco", preco.toString());
-    formData.append("categoriaId", categoriaId.toString());
+    formData.append("nomeCategoria", nomeCategoria);
 
     if (imagem) {
       formData.append("imagem", imagem);
@@ -166,19 +168,16 @@ export function ProductEdit({
               <Label htmlFor="category">ID Categoria</Label>
               <Input
                 id="category"
-                value={categoriaId === 0 ? "" : categoriaId}
-                onChange={(e) =>
-                  setCategoriaId(
-                    e.target.value === "" ? 0 : parseInt(e.target.value)
-                  )
-                }
+                value={nomeCategoria}
+                onChange={(e) => setNomeCategoria(e.target.value)}
                 className="col-span-3 border-2"
+                placeholder="Digite o nome da categoria..."
               />
             </div>
 
             <div className="grid grid-cols-4 items-center text-left">
               <Label htmlFor="imagem">Imagem</Label>
-              <Input
+              <input
                 type="file"
                 id="imagem"
                 onChange={(e) =>

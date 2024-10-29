@@ -139,7 +139,7 @@ export function CardsDash() {
                 </SelectContent>
               </Select>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col gap-8 items-center">
               <Table>
                 <TableHeader className="border-b-2">
                   <TableRow className="hover:bg-slate-950">
@@ -166,6 +166,10 @@ export function CardsDash() {
                   })}
                 </TableBody>
               </Table>
+
+              <a href="/produto" className="w-[150px] text-sm text-center px-1 py-2 rounded-md font-medium cursor-pointer bg-slate-50 text-foreground hover:bg-slate-950 hover:text-white transition-all">
+                Ver Todos
+              </a>
             </CardContent>
           </Card>
         </section>

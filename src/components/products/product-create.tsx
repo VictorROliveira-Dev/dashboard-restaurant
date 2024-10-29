@@ -25,7 +25,7 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
   const [preco, setPreco] = useState<number>(0);
-  const [categoriaId, setCategoriaId] = useState<number>(1);
+  const [nomeCategoria, setNomeCategoria] = useState<string>("");
   const [imagem, setImagem] = useState<File | null>(null);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -51,7 +51,7 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
     formData.append("nome", nome);
     formData.append("descricao", descricao);
     formData.append("preco", preco.toString());
-    formData.append("categoriaId", categoriaId.toString());
+    formData.append("categoria", nomeCategoria);
 
     if (imagem) {
       formData.append("imagem", imagem);
@@ -68,7 +68,7 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
       setNome("");
       setDescricao("");
       setPreco(0);
-      setCategoriaId(1);
+      setNomeCategoria("");
       setImagem(null);
       toast.success("Produto adicionado com sucesso!", {
         className:
@@ -146,22 +146,19 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
           </div>
 
           <div className="grid grid-cols-4 items-center text-left">
-            <Label htmlFor="category">ID Categoria</Label>
+            <Label htmlFor="category">Categoria</Label>
             <Input
               id="category"
-              value={categoriaId === 0 ? "" : categoriaId}
-              onChange={(e) =>
-                setCategoriaId(
-                  e.target.value === "" ? 0 : parseInt(e.target.value)
-                )
-              }
+              value={nomeCategoria}
+              onChange={(e) => setNomeCategoria(e.target.value)}
               className="col-span-3 border-2"
+              placeholder="Digite o nome da categoria..."
             />
           </div>
 
           <div className="grid grid-cols-4 items-center text-left">
             <Label htmlFor="imagem">Imagem</Label>
-            <Input
+            <input
               type="file"
               id="imagem"
               onChange={(e) =>

@@ -12,7 +12,7 @@ import {
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Product } from "../../lib/types"; // Importando o tipo Product
+import { Product } from "../../lib/types";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -35,6 +35,7 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
     e.preventDefault();
     setIsAdding(true);
 
+    // Capturando token no local storage
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("Usuário não autênticado.", {
@@ -47,6 +48,7 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
       return;
     }
 
+    // Por ser um formulário na API, deve-se enviar em um "FormData" os dados
     const formData = new FormData();
     formData.append("nome", nome);
     formData.append("descricao", descricao);
@@ -58,18 +60,23 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
     }
 
     try {
+      // Capturando resposta da requisição post
       const response = await api.post("/produto", formData, {
+        // Solicitando autorização através de um token
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
+      // Atualizando o estado da lista de produtos com o novo produto
       setProducts([...products, response.data.data]);
+      // Limpando os campos para o valor padrão
       setNome("");
       setDescricao("");
       setPreco(0);
       setNomeCategoria("");
       setImagem(null);
+      // Mensagem em caso de sucesso
       toast.success("Produto adicionado com sucesso!", {
         className:
           "bg-slate-900 text-white font-semibold border-none shadow-lg",
@@ -79,6 +86,7 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
         },
       });
     } catch (error: any) {
+      // Mensagem em caso de erro
       toast.error("Erro ao tentar criar produto.", {
         className: "bg-red-500 text-white font-semibold border-none shadow-lg",
         style: {
@@ -86,6 +94,7 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
           padding: "16px",
         },
       });
+      // Logout do usuário em caso de erro "Unauthorized"
       if (error.response.status == 401) {
         localStorage.removeItem("token");
         navigate("/login");

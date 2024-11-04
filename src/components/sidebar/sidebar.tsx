@@ -19,6 +19,8 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 
+import chefeIcon from "../../assets/chef-icon.svg"
+
 export function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -45,7 +47,7 @@ export function Sidebar() {
               href="#"
               className="flex h-9 w-9 shrink-0 items-center justify-center bg-white text-black rounded-full"
             >
-              <UtensilsCrossed className="w-4 h-4" />
+              <img src={chefeIcon} alt="Ícone de cozinheiro" />
               <span className="sr-only">Dashboard ícone</span>
             </a>
 

@@ -25,6 +25,10 @@ import {
   TableRow,
 } from "../ui/table";
 
+import orderIcon from "../../assets/orders-icon.svg"
+import allOrderIcon from "../../assets/allorders-icon.svg"
+import boxIcon from "../../assets/box-icon.svg"
+
 export function CardsDash() {
   return (
     <>
@@ -53,11 +57,11 @@ export function CardsDash() {
 
           <Card className="bg-slate-900 border-none">
             <CardHeader>
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-between">
                 <CardTitle className="text-lg sm:text-xl text-white select-none">
                   Pedidos Atuais:
                 </CardTitle>
-                <Percent className="ml-auto w-6 h-6 text-white" />
+                <img src={orderIcon} alt="ícone Pedidos" />
               </div>
 
               <CardDescription className="font-medium text-slate-400">
@@ -72,11 +76,11 @@ export function CardsDash() {
 
           <Card className="bg-slate-900 border-none">
             <CardHeader>
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-between">
                 <CardTitle className="text-lg sm:text-xl text-white select-none">
                   Pedidos Gerais:
                 </CardTitle>
-                <ShoppingBag className="ml-auto w-6 h-6 text-white" />
+                <img src={allOrderIcon} alt="ícone Pedidos" />
               </div>
 
               <CardDescription className="font-medium text-slate-400">
@@ -91,11 +95,11 @@ export function CardsDash() {
 
           <Card className="bg-slate-900 border-none">
             <CardHeader>
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-between">
                 <CardTitle className="text-lg sm:text-xl text-white select-none">
                   Vendas Atuais:
                 </CardTitle>
-                <PackageOpen className="ml-auto w-6 h-6 text-white" />
+                <img src={boxIcon} alt="ícone Pedidos" />
               </div>
 
               <CardDescription className="font-medium text-slate-400">

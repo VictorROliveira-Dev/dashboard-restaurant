@@ -43,12 +43,13 @@ export function Products() {
       setIsLoading(true);
 
       try {
+        // Capturando produtos existentes no banco
         const response = await api.get("/produto", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
+        // Atualizando o estado do produto para receber um produto
         setProducts(response.data.data);
       } catch (error) {
         toast.error("Erro ao tentar recuperar os produtos.", {
@@ -67,6 +68,7 @@ export function Products() {
     fetchProducts();
   }, []);
 
+  // Filtrando produtos para realizar a busca no input
   const filteredProducts = products.filter((product) => {
     if (!product.nome) return false;
 

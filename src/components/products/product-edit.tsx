@@ -41,6 +41,7 @@ export function ProductEdit({
 
   const navigate = useNavigate();
 
+  // Limpando os itens do produto para cada nova requisição feita
   useEffect(() => {
     setNome(product.nome);
     setDescricao(product.descricao);
@@ -83,8 +84,11 @@ export function ProductEdit({
         },
       });
 
+      // Atribuindo resposta para uma variável produto
       const updatedProduct = response.data.data;
 
+      // Verificando e atualizando o produto, casa o id seja igual ao do id passado na solicitação,
+      // em caso de ser igual, passa os dados do produto atualizado
       const updatedProducts = products.map((p) =>
         p.id === updatedProduct.id ? updatedProduct : p
       );

@@ -9,17 +9,18 @@ import {
   LogOut,
   UtensilsCrossed,
   Text,
+  UserRoundCog,
 } from "lucide-react";
 import {
   TooltipProvider,
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from "../ui/tooltip"; // Substitua pelos seus imports corretos
+} from "../ui/tooltip";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 
-import chefeIcon from "../../assets/chef-icon.svg"
+import chefeIcon from "../../assets/chef-icon.svg";
 
 export function Sidebar() {
   const location = useLocation();
@@ -122,12 +123,12 @@ export function Sidebar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <a
-                  href="/settings"
+                  href="/restaurant"
                   className={`flex h-9 w-9 shrink-0 items-center justify-center transition-colors hover:text-white ${isActive(
                     "/settings"
                   )}`}
                 >
-                  <Cog className="w-5 h-5" />
+                  <UserRoundCog className="w-5 h-5" />
                   <span className="sr-only">Configurações</span>
                 </a>
               </TooltipTrigger>

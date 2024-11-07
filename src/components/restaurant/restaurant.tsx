@@ -32,6 +32,7 @@ import { DialogFooter, DialogHeader } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
+
 import { useNavigate } from "react-router-dom";
 
 export function Restaurant() {
@@ -223,7 +224,7 @@ export function Restaurant() {
         email: email ? email : restauranteInfo?.email,
       } as restaurante;
 
-      const response = await api.put(`/restaurante`, updateRestaurante, {
+      const response = await api.put("/restaurante", updateRestaurante, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -249,16 +250,18 @@ export function Restaurant() {
 
   return (
     <>
-      <div className="flex  flex-col gap-10 items-center h-full w-100 p-1 bg-slate-950 pt-10">
-        <Card className="w-3/4 h-3/6 flex flex-col items-center bg-slate-900 border-none text-white">
+      <div className="flex flex-col gap-10 items-center h-full p-1 bg-slate-950 pt-10">
+        <Card className="w-3/4 h-3/6 flex flex-col py-5 items-center bg-slate-900 border-none text-white">
           <CardHeader>
-            <CardTitle>Informacoes do restaurante</CardTitle>
-            <CardDescription>
-              Deploy your new project in one-click.
+            <CardTitle className="text-center">
+              Informações do Restaurante
+            </CardTitle>
+            <CardDescription className="font-medium">
+              Adicione e altere suas configurações aqui.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="flex justify-between gap-10">
+          <CardContent className="w-full flex justify-center">
+            <div className="flex items-center">
               <div className="w-full flex flex-col gap-8">
                 <div className="flex gap-1">
                   <UserRound />
@@ -267,7 +270,7 @@ export function Restaurant() {
                   </span>
                 </div>
 
-                <div className="flex gap-1 ">
+                <div className="flex gap-1">
                   <MailMinus />
                   <span className="font-semibold">
                     Email: {restauranteInfo?.email}
@@ -293,7 +296,7 @@ export function Restaurant() {
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button>Editar</Button>
+              <Button className="bg-slate-50 text-black hover:bg-slate-950 hover:text-white">Editar</Button>
             </DialogTrigger>
 
             <DialogPortal>
@@ -380,15 +383,15 @@ export function Restaurant() {
                   <CardTitle>{getWeekDayName(horario.diaSemana)}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
-                  <div className="flex gap-1">
-                    <AlarmClock />
+                  <div className="flex gap-1 items-center">
+                    <AlarmClock  size={15}/>
                     <span className="font-semibold">
                       Horario Abertura: {horario.horaAbertura.substring(0, 5)}
                     </span>
                   </div>
 
-                  <div className="flex gap-1">
-                    <AlarmClock />
+                  <div className="flex gap-1 items-center">
+                    <AlarmClock size={15} />
                     <span className="font-semibold">
                       Horario de fechamento:{" "}
                       {horario.horaFechamento.substring(0, 5)}
@@ -396,8 +399,8 @@ export function Restaurant() {
                   </div>
 
                   {horario.funcionando ? (
-                    <div className="flex gap-1">
-                      <CircleCheckBig className="text-green-600" />
+                    <div className="flex gap-1 items-center">
+                      <CircleCheckBig className="text-green-600" size={15} />
                       <span className="font-semibold text-green-600">
                         Funcionando
                       </span>
@@ -417,7 +420,7 @@ export function Restaurant() {
                     variant="outline"
                     className={`${
                       horario.funcionando
-                        ? "text-red-600 border-red-600"
+                        ? "text-white border-none"
                         : "text-green-600 border-green-600"
                     } bg-slate-950`}
                   >
@@ -425,7 +428,7 @@ export function Restaurant() {
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button>Editar</Button>
+                      <Button className="bg-slate-50 text-black hover:bg-slate-950 hover:text-white">Editar</Button>
                     </DialogTrigger>
 
                     <DialogPortal>

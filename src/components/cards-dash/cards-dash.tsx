@@ -1,4 +1,4 @@
-import { Coins, PackageOpen, Percent, ShoppingBag } from "lucide-react";
+import { Coins } from "lucide-react";
 import {
   Card,
   CardContent,

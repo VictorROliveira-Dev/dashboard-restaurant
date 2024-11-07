@@ -12,7 +12,6 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogOverlay,
   DialogPortal,
   DialogTitle,
@@ -20,14 +19,11 @@ import {
 } from "@radix-ui/react-dialog";
 import {
   AlarmClock,
-  Calendar,
   CircleCheckBig,
   CircleX,
   LoaderCircle,
   MailMinus,
   MapPinHouse,
-  Pen,
-  Plus,
   Smartphone,
   UserRound,
 } from "lucide-react";
@@ -36,8 +32,6 @@ import { DialogFooter, DialogHeader } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
-import { ServerResponse } from "http";
-import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
 export function Restaurant() {
@@ -156,7 +150,7 @@ export function Restaurant() {
       console.log(horarios);
 
       toast.success(response.data.message);
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.status);
       if (error.status == 401) {
         localStorage.removeItem("token");
@@ -204,7 +198,7 @@ export function Restaurant() {
       toast.success("dados do restaurante atualizado", {
         className: "bg-green-200",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.status);
       if (error.status == 401) {
         localStorage.removeItem("token");
@@ -240,7 +234,7 @@ export function Restaurant() {
       }
 
       setRestaurante(updateRestaurante);
-    } catch (erro) {
+    } catch (error: any) {
       console.log(error.status);
       if (error.status == 401) {
         localStorage.removeItem("token");

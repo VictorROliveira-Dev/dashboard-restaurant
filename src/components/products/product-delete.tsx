@@ -42,7 +42,7 @@ export function ProductDelete({
         },
       });
 
-      if (!response.data.isSuccess) {
+      if (!response.data.isSucces) {
         return;
       }
 

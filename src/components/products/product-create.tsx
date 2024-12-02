@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { api } from "@/lib/axios";
 import { LoaderCircle, Plus } from "lucide-react";
 import { Button } from "../ui/button";
@@ -25,11 +25,33 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
   const [nome, setNome] = useState("");
   const [descricao, setDescricao] = useState("");
   const [preco, setPreco] = useState<number>(0);
-  const [nomeCategoria, setNomeCategoria] = useState<string>("");
+  const [categoriaId, setCategoriaId] = useState<number>(0);
   const [imagem, setImagem] = useState<File | null>(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [categorias, setCategorias] = useState<{ id: number; nome: string }[]>(
+    []
+  );
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await api.get("/categoria");
+        setCategorias(response.data.data);
+      } catch (error: any) {
+        toast.error("Erro ao carregar categorias.", {
+          className:
+            "bg-red-500 text-white font-semibold border-none shadow-lg",
+          style: {
+            borderRadius: "10px",
+            padding: "16px",
+          },
+        });
+      }
+    };
+    fetchCategorias();
+  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -53,7 +75,7 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
     formData.append("nome", nome);
     formData.append("descricao", descricao);
     formData.append("preco", preco.toString());
-    formData.append("categoria", nomeCategoria);
+    formData.append("categoriaId", categoriaId.toString());
 
     if (imagem) {
       formData.append("imagem", imagem);
@@ -70,11 +92,12 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
       });
       // Atualizando o estado da lista de produtos com o novo produto
       setProducts([...products, response.data.data]);
+      console.log(response.data.data);
       // Limpando os campos para o valor padrão
       setNome("");
       setDescricao("");
       setPreco(0);
-      setNomeCategoria("");
+      setCategoriaId(0);
       setImagem(null);
       // Mensagem em caso de sucesso
       toast.success("Produto adicionado com sucesso!", {
@@ -156,13 +179,23 @@ export function ProductCreate({ setProducts, products }: ProductCreateProps) {
 
           <div className="grid grid-cols-4 items-center text-left">
             <Label htmlFor="category">Categoria</Label>
-            <Input
+            <select
               id="category"
-              value={nomeCategoria}
-              onChange={(e) => setNomeCategoria(e.target.value)}
-              className="col-span-3 border-2"
-              placeholder="Digite o nome da categoria..."
-            />
+              value={categoriaId}
+              onChange={(e) =>
+                setCategoriaId(
+                  e.target.value === "" ? 0 : parseFloat(e.target.value)
+                )
+              }
+              className="bg-transparent col-span-3 border-2 text-white rounded-md p-1 cursor-pointer"
+            >
+              <option className="bg-slate-900" value={0}>Selecione uma categoria...</option>
+              {categorias.map((categoria) => (
+                <option className="bg-slate-900" key={categoria.id} value={categoria.id}>
+                  {categoria.nome}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="grid grid-cols-4 items-center text-left">

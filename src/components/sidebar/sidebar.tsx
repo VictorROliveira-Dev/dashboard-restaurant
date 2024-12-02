@@ -4,7 +4,6 @@ import {
   ShoppingBag,
   Package,
   ClipboardList,
-  Cog,
   Info,
   LogOut,
   UtensilsCrossed,
@@ -108,7 +107,7 @@ export function Sidebar() {
                 <a
                   href="/categorias"
                   className={`flex h-9 w-9 shrink-0 items-center justify-center transition-colors hover:text-white ${isActive(
-                    "/categories"
+                    "/categorias"
                   )}`}
                 >
                   <ClipboardList className="w-5 h-5" />
@@ -125,7 +124,7 @@ export function Sidebar() {
                 <a
                   href="/restaurant"
                   className={`flex h-9 w-9 shrink-0 items-center justify-center transition-colors hover:text-white ${isActive(
-                    "/settings"
+                    "/restaurant"
                   )}`}
                 >
                   <UserRoundCog className="w-5 h-5" />
@@ -230,10 +229,10 @@ export function Sidebar() {
                 </a>
 
                 <a
-                  href="#"
+                  href="/restaurant"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-white"
                 >
-                  <Cog className="w-5 h-5 translate-all" />
+                  <UserRoundCog className="w-5 h-5" />
                   Configurações
                 </a>
                 <a

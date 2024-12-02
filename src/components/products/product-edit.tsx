@@ -33,9 +33,7 @@ export function ProductEdit({
   const [nome, setNome] = useState(product.nome);
   const [descricao, setDescricao] = useState(product.descricao);
   const [preco, setPreco] = useState<number>(product.preco);
-  const [nomeCategoria, setNomeCategoria] = useState<string>(
-    product.nomeCategoria
-  );
+  const [categoriaId, setCategoriaId] = useState<number>(product.categoriaId);
   const [imagem, setImagem] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -46,7 +44,7 @@ export function ProductEdit({
     setNome(product.nome);
     setDescricao(product.descricao);
     setPreco(product.preco);
-    setNomeCategoria(product.nomeCategoria);
+    setCategoriaId(product.categoriaId);
     setImagem(null);
   }, [product]);
 
@@ -70,7 +68,7 @@ export function ProductEdit({
     formData.append("nome", nome);
     formData.append("descricao", descricao);
     formData.append("preco", preco.toString());
-    formData.append("nomeCategoria", nomeCategoria);
+    formData.append("categoriaId", categoriaId.toString());
 
     if (imagem) {
       formData.append("imagem", imagem);
@@ -103,7 +101,7 @@ export function ProductEdit({
       });
       setIsOpen(false);
     } catch (error: any) {
-      toast.error("Erro ao tentar adicionar produto.", {
+      toast.error("Erro ao tentar atualizar o produto.", {
         className:
           "bg-slate-950 text-white font-semibold border-none shadow-lg",
         style: {
@@ -172,8 +170,8 @@ export function ProductEdit({
               <Label htmlFor="category">ID Categoria</Label>
               <Input
                 id="category"
-                value={nomeCategoria}
-                onChange={(e) => setNomeCategoria(e.target.value)}
+                value={categoriaId}
+                onChange={(e) => setCategoriaId(parseFloat(e.target.value))}
                 className="col-span-3 border-2"
                 placeholder="Digite o nome da categoria..."
               />

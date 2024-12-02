@@ -180,7 +180,7 @@ export function Orders() {
   }, [token]);
   return (
     <>
-      <section className="bg-slate-950 h-screen w-full flex  items-start  justify-center md:p-24">
+      <section className="bg-slate-950 pt-10 h-screen w-full flex  items-start  justify-center md:p-24">
         <Tabs defaultValue="abertos" className="md:w-[80%] w-[380px]">
           <TabsList className="grid w-full grid-cols-4 bg-slate-900 text-white">
             <TabsTrigger value="todos">Todos</TabsTrigger>
@@ -201,9 +201,9 @@ export function Orders() {
                   <CardTitle>Pedido {pedido.id}</CardTitle>
                   <CardDescription>{pedido.endereco}</CardDescription>
                 </CardHeader>
-                <CardContent className="flex items-center gap-2">
-                  <span>{pedido.nomeCliente}</span>
-                  <Badge className="text-[8px] bg-blue-700 text-white hover:bg-blue-700 select-none">
+                <CardContent className="flex flex-col gap-2">
+                  <p>{pedido.nomeCliente}</p>
+                  <Badge className="text-[8px] w-[130px] bg-blue-700 text-white hover:bg-blue-700 select-none">
                     Aberto
                   </Badge>
                 </CardContent>
@@ -236,9 +236,9 @@ export function Orders() {
                     <CardTitle>Pedido {pedido.id}</CardTitle>
                     <CardDescription>{pedido.endereco}</CardDescription>
                   </CardHeader>
-                  <CardContent className="flex items-center gap-2">
-                    <span>{pedido.nomeCliente}</span>
-                    <Badge className="text-[8px] bg-blue-700 text-white hover:bg-blue-700 select-none">
+                  <CardContent className="flex flex-col gap-2">
+                    <p>{pedido.nomeCliente}</p>
+                    <Badge className="text-[8px] w-[130px] bg-blue-700 text-white hover:bg-blue-700 select-none">
                       Aberto
                     </Badge>
                   </CardContent>
@@ -284,9 +284,9 @@ export function Orders() {
                     <CardTitle>Pedido {pedido.id}</CardTitle>
                     <CardDescription>{pedido.endereco}</CardDescription>
                   </CardHeader>
-                  <CardContent className="flex items-center gap-2">
-                    <span>{pedido.nomeCliente}</span>
-                    <Badge className="text-[8px] bg-yellow-600 text-white hover:bg-yellow-600 select-none">
+                  <CardContent className="flex flex-col gap-2">
+                    <p>{pedido.nomeCliente}</p>
+                    <Badge className="text-[8px] w-[130px] bg-yellow-600 text-white hover:bg-yellow-600 select-none">
                       Em Preparo
                     </Badge>
                   </CardContent>
@@ -330,9 +330,9 @@ export function Orders() {
                     <CardTitle>Pedido {pedido.id}</CardTitle>
                     <CardDescription>{pedido.endereco}</CardDescription>
                   </CardHeader>
-                  <CardContent className="flex items-center gap-2">
-                    <span>{pedido.nomeCliente}</span>
-                    <Badge className="bg-green-600 text-white hover:bg-green-600 select-none">
+                  <CardContent className="flex flex-col gap-2">
+                    <p>{pedido.nomeCliente}</p>
+                    <Badge className="bg-green-600 w-[130px] text-white hover:bg-green-600 select-none">
                       Saiu para entrega
                     </Badge>
                   </CardContent>

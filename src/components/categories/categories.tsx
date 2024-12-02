@@ -69,7 +69,7 @@ export function Categories() {
   };
 
   return (
-    <div className="flex items-center md:h-screen h-[800px] p-1 bg-slate-950">
+    <div className="flex md:items-center md:h-screen h-[607px] md:p-1 px-1 py-10 bg-slate-950">
       <div className="mx-auto md:max-w-2xl md:w-[800px] w-[350px] space-y-4">
         <h1 className="text-white md:text-4xl text-2xl font-semibold">
           Categorias:

@@ -22,8 +22,8 @@ import {
   CircleCheckBig,
   CircleX,
   LoaderCircle,
-  MailMinus,
-  MapPinHouse,
+  Mail,
+  MapPin,
   Smartphone,
   UserRound,
 } from "lucide-react";
@@ -235,6 +235,7 @@ export function Restaurant() {
       }
 
       setRestaurante(updateRestaurante);
+
     } catch (error: any) {
       console.log(error.status);
       if (error.status == 401) {
@@ -250,45 +251,43 @@ export function Restaurant() {
 
   return (
     <>
-      <div className="flex flex-col gap-10 items-center h-full p-1 bg-slate-950 pt-10">
+      <div className="flex flex-col gap-10 items-center h-full py-10 bg-slate-950">
         <Card className="w-3/4 h-3/6 flex flex-col py-5 items-center bg-slate-900 border-none text-white">
           <CardHeader>
-            <CardTitle className="text-center">
+            <CardTitle className="text-center text-2xl">
               Informações do Restaurante
             </CardTitle>
-            <CardDescription className="font-medium">
+            <CardDescription className="font-medium text-center">
               Adicione e altere suas configurações aqui.
             </CardDescription>
           </CardHeader>
-          <CardContent className="w-full flex justify-center">
-            <div className="flex items-center">
-              <div className="w-full flex flex-col gap-8">
-                <div className="flex gap-1">
-                  <UserRound />
-                  <span className="font-semibold">
-                    Nome: {restauranteInfo?.nome}
-                  </span>
+          <CardContent className="flex items-center justify-center w-full">
+            <div className="flex flex-col md:flex-row items-center justify-between md:gap-20 gap-8">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <UserRound size={20} />
+                  <p className="font-semibold">Nome: {restauranteInfo?.nome}</p>
                 </div>
-
-                <div className="flex gap-1">
-                  <MailMinus />
-                  <span className="font-semibold">
+                <div className="flex gap-2">
+                  <Mail size={20} />
+                  <p className="font-semibold">
                     Email: {restauranteInfo?.email}
-                  </span>
+                  </p>
                 </div>
               </div>
-              <div className=" w-full flex flex-col gap-8">
-                <div className="flex gap-1">
-                  <Smartphone />
-                  <span className="font-semibold">
+
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  <Smartphone size={20} />
+                  <p className="font-semibold">
                     Telefone: {restauranteInfo?.telefone}
-                  </span>
+                  </p>
                 </div>
-                <div className="flex gap-1">
-                  <MapPinHouse />
-                  <span className="font-semibold">
+                <div className="flex gap-2">
+                  <MapPin size={20} />
+                  <p className="font-semibold">
                     Endereco: {restauranteInfo?.endereco}
-                  </span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -296,7 +295,9 @@ export function Restaurant() {
 
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="bg-slate-50 text-black hover:bg-slate-950 hover:text-white">Editar</Button>
+              <Button className="bg-slate-50 text-black hover:bg-slate-50/10 hover:text-white">
+                Editar
+              </Button>
             </DialogTrigger>
 
             <DialogPortal>
@@ -369,9 +370,9 @@ export function Restaurant() {
           </Dialog>
         </Card>
 
-        <h1 className="text-white">Funcionamento</h1>
+        <h1 className="text-white text-2xl font-bold">Funcionamento</h1>
 
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 gap-4">
           {horarios
             .sort((a, b) => a.diaSemana - b.diaSemana)
             .map((horario) => (
@@ -384,7 +385,7 @@ export function Restaurant() {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
                   <div className="flex gap-1 items-center">
-                    <AlarmClock  size={15}/>
+                    <AlarmClock size={15} />
                     <span className="font-semibold">
                       Horario Abertura: {horario.horaAbertura.substring(0, 5)}
                     </span>
@@ -422,13 +423,15 @@ export function Restaurant() {
                       horario.funcionando
                         ? "text-white border-none"
                         : "text-green-600 border-green-600"
-                    } bg-slate-950`}
+                    } bg-slate-950 hover:bg-slate-950/60 hover:text-white`}
                   >
                     {horario.funcionando ? "Fechar" : "Abrir"}
                   </Button>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button className="bg-slate-50 text-black hover:bg-slate-950 hover:text-white">Editar</Button>
+                      <Button className="bg-slate-50 text-black hover:bg-slate-50/10 hover:text-white">
+                        Editar
+                      </Button>
                     </DialogTrigger>
 
                     <DialogPortal>
